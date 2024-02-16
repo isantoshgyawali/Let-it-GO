@@ -184,6 +184,17 @@ func initialsReturn(n string) (string, string) /**returning two string values*/ 
    return initials[0], "_"
 }
 
+func yourValue(){
+  value := "shyam"
+  
+  updateValue(value) // at ./passByValue.go
+  fmt.Println(value) // don't changes value
+   
+  value = updateValue(value) // updates the value but consumes more space as it
+                             // made a copy outside the scope
+  fmt.Println(value)
+}
+
 func main(){
   //first()
   //dataTypes()
@@ -229,6 +240,10 @@ func main(){
   // -- As I know how to use multiple file from this point
   // -- each program will have there own file
   //usingMap() // at ./map.go
-  insertMap() // at ./learninput.go
+  //insertMap() // at ./learninput.go
+  
+  //yourValue()
+
+  //pointer()
 }
 
