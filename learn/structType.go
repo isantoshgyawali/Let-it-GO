@@ -12,8 +12,8 @@ type bill struct {
 func newBill(name string) bill {
  b := bill{
   name: name,
-  items: map[string]float64{"cake": 24.66, "Pie": 52.75},
-  tip: 100,
+  items: map[string]float64{},
+  tip: 0,
  }
  return b
 }
@@ -21,9 +21,17 @@ func newBill(name string) bill {
 func bills() {
 	myBill := newBill("san's bill ")
 
-	fmt.Println(myBill.name, myBill.items,myBill.tip)
+	fmt.Printf("Items in bill")
+	fmt.Printf("\n%v \n %v \n %v \n",myBill.name, myBill.items,myBill.tip)
+
+
+	myBill.updateItems("coffee", 15.63)
+	myBill.updateItems("pasta", 37.63)
+	myBill.updateItems("noodles", 43.63)
+	myBill.updateTip(12.57)
+
 	format := myBill.format()
-	fmt.Printf("\n-------------------------\n%v\n",format)
+	fmt.Printf("-------------------------\n%v\n",format)
 }
 
 
@@ -57,8 +65,40 @@ func (b bill) format()string {
 	   fs += fmt.Sprintf("%-10v ...$%v\n", k+":",v)
 	   total += v
    }
+
+   //adding tips
+   fs += fmt.Sprintf("%-10v ...$%0.2f\n", "total:",b.tip)
    fs += fmt.Sprintf("------------------------\n")
+
    //toal
-   fs += fmt.Sprintf("%-10v ...$%0.2f\n", "total:",total)
+   fs += fmt.Sprintf("%-10v ...$%0.2f\n", "total:",total+b.tip)
    return fs
+}
+
+// -----------------------------------------------------------
+// -----------------------------------------------------------
+// -----------------------------------------------------------
+
+/** 
+* Learning to use pointers with struct 
+*
+* Appending the data to the map and
+* adding updating the tip
+**/
+func (b *bill) updateTip(tip float64){
+
+  /**
+  * created a copy of bill so updating without using 
+  * refrence of bill here will not update the 
+  *
+  * using this will allow you to save space as each time you
+  * call this method the copy of object is not created which means 
+  * if the method is complex and large only pointer to the bill object is 
+  * created but not the data under it
+  */
+  b.tip = tip
+}
+ 
+func (b *bill) updateItems(name string , price float64){
+  b.items[name] = price 
 }
