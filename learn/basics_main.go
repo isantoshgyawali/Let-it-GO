@@ -245,5 +245,6 @@ func main(){
   //yourValue()
 
   //pointer()
+  bills()
 }
 
