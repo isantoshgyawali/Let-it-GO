@@ -245,6 +245,8 @@ func main(){
   //yourValue()
 
   //pointer()
-  bills()
+  //bills()
+
+  interfaces() //./interfaces.go
 }
 

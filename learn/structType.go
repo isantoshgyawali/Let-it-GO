@@ -39,7 +39,7 @@ func bills() {
 * These type of functions can only be called from
 * object associated with the given type 
 *
-* here any object associated with bill type 
+* here, any objects associated with bill type 
 * can only access the prinData() method
 */
 //example-method with type bill
@@ -77,7 +77,6 @@ func (b bill) format()string {
 
 // -----------------------------------------------------------
 // -----------------------------------------------------------
-// -----------------------------------------------------------
 
 /** 
 * Learning to use pointers with struct 
@@ -89,12 +88,14 @@ func (b *bill) updateTip(tip float64){
 
   /**
   * created a copy of bill so updating without using 
-  * refrence of bill here will not update the 
+  * refrence of bill here will not update the bill itself
   *
-  * using this will allow you to save space as each time you
-  * call this method the copy of object is not created which means 
-  * if the method is complex and large only pointer to the bill object is 
-  * created but not the data under it
+  * using pointers will allow you to save space as each time you
+  * call pointers method the copy of object is not created which is
+  * if the method is complex and large, the data underlying it will not be 
+  * created at another memory location saving memory and copying data is 
+  * more time complex than saving just memory location which ultimately improves
+  * execution time of the program
   */
   b.tip = tip
 }
