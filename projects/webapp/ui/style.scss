@@ -1,0 +1,86 @@
+* {
+    box-sizing: border-box;
+    overflow-x: hidden;
+
+    body {
+        max-height: 100dvh;
+        max-width: 100dvw;
+    }
+}
+
+.container {
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    row-gap: 2rem;
+    align-items: center;
+    justify-content: center;
+
+    form {
+        display: flex;
+        align-items: flex-end;
+        flex-direction: column;
+
+        .userInput {
+            display: flex;
+            flex-direction: column;
+
+            #chooseOptions {
+                width: 50%;
+                padding: 0.7rem 1rem;
+                border: 2px solid black;
+                border-radius: 1rem;
+                background-color: whitesmoke;
+                color: black;
+                cursor: pointer;
+                font-weight: bold;
+                margin-bottom: 2rem;
+            }
+
+            label {
+                font-weight: bold;
+            }
+
+            .inputBox {
+                padding: 0.7rem;
+                border: 2px solid black;
+                outline: none;
+                border-radius: 0.7rem;
+                margin-bottom: 1rem;
+            }
+
+        }
+
+         .addData {
+            padding: 0.5rem;
+            font-weight: bold;
+            margin-left: 1rem;
+            margin-bottom: 0.3rem;
+            cursor: pointer;
+        }
+    }
+
+
+    .gotoBtn {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1rem;
+
+        input {
+            padding: 0.7rem 1rem;
+            border-radius: 1rem;
+            border: none;
+            color: whitesmoke;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        input:nth-of-type(1) {
+            background-color: royalblue;
+        }
+
+        input:nth-of-type(2) {
+            background-color: green;
+        }
+    }
+}

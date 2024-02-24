@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="message"></div>
+
+        <form id="mainForm" method="post" action="/submit">
+            <div class="userInput">
+                <select id="chooseOptions" name="selections">
+                    <option value="User">User</option>
+                    <option value="Org">Org</option>
+                </select>
+
+                <label for="name">Name: </label>
+                <input type="text" name="name" id="name" class="inputBox">
+
+
+                <label for="address">address: </label>
+                <input type="text" name="address" id="address" class="inputBox">
+
+                <label for="email">email: </label>
+                <input type="text" name="email" id="email" class="inputBox">
+            </div>
+                <input type="button" class="addData" value="Add Data" onclick="submitForm()" />
+        </form>
+
+        <div class="gotoBtn">
+            <input type="button" value="Goto UserData" onclick="goToUser()" />
+            <input type="button" value="Goto OrgData" onclick="goToOrg()" />
+        </div>
+
+    </div>
+    <script src="index.js"></script>
+</body>
+
+</html>
