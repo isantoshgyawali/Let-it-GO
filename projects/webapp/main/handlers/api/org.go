@@ -35,19 +35,12 @@ func DeleteOrgByID(c *gin.Context) {
 
 }
 
-func OrgRoutes() *gin.RouterGroup {
-	ur := gin.New()
+func OrgRoutes(r *gin.RouterGroup) {
+	r.GET("/", GetAllOrg)
+	r.GET("/:id/", GetOrgByID)
 
-	orgGroup:= ur.Group("/org")
-	{
-		orgGroup.GET("/", GetAllOrg)
-		orgGroup.GET("/:id", GetOrgByID)
+	r.POST("/", CreateOrg)
+	r.PUT("/:id/", UpdateOrgByID)
 
-		orgGroup.POST("/", CreateOrg)
-		orgGroup.PUT("/:id", UpdateOrgByID)
-
-		orgGroup.DELETE("/:id", DeleteOrgByID)
-	}
-
-	return orgGroup
+	r.DELETE("/:id/", DeleteOrgByID)
 }
