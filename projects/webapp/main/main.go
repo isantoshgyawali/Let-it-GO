@@ -1,10 +1,23 @@
 package main
 
 import (
+	"log"
+
 	"github.com/isantoshgyawali/apiWebGo/handlers/router"
+	"github.com/isantoshgyawali/apiWebGo/initializers"
 )
 
+//This runs even before the main function
+func init(){
+	initializers.LoadEnvVar()
+}
+
 func main() {
-	//starting the router
-	router.RequestRouter().Run(":8081")
+	/**
+		Serving the different html files at specific routes
+		and then starting the server at port localohost:8081
+	*/
+	if err := router.RequestRouter().Run(); err != nil {
+		log.Fatal(err)
+	}
 }

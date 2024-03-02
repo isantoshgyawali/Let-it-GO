@@ -1,26 +1,36 @@
 package api
 
 import (
-	//"fmt"
-	//"net/http"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
-// type org struct {
-//  ID     string `json:"id"`
-//  Name   string `json:"name"`
-//  Adress string `json:"address"`
-//  Email  string `json:"email"`
-//}
-//
+var orgDetails = []details { 
+	{ID: "1", Name: "TESLA", Adress: "USA", Email: "tesla@test.com"},
+	{ID: "2", Name: "TWITTER", Adress: "USA", Email: "tesla@test.com"},
+	{ID: "1", Name: "BORING", Adress: "USA", Email: "boring@test.com"},
+}
 
 func GetAllOrg(c *gin.Context) {
+	c.HTML(http.StatusOK, "org-data.html", gin.H{
+		"title": "Org-Data-log",
+		"message": "Hello Org",
+	})
 
 }
 
 func GetOrgByID(c *gin.Context) {
+	id := c.Param("id")
 
+	for _, v := range orgDetails{
+		if v.ID == id {
+			c.IndentedJSON(http.StatusOK, v)
+			return
+		}
+	}
+
+	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "org not found"})
 }
 
 func CreateOrg(c *gin.Context) {

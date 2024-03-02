@@ -6,20 +6,20 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type user struct {
-	ID     string `json:"id"`
-	Name   string `json:"name"`
-	Adress string `json:"address"`
-	Email  string `json:"email"`
-}
 
-var userDetails = []user{
+var userDetails = []details {
 	{ID: "1", Name: "Villiers", Adress: "SA", Email: "ab17@360.com"},
 	{ID: "2", Name: "McCullum", Adress: "NZ", Email: "brendon@42.com"},
 }
 
-func GetAllUser(c *gin.Context) {
-	c.IndentedJSON(http.StatusOK, userDetails)
+func GetAllUser(c *gin.Context ) {
+	//while the status is found ok , returns the map of userDetails
+	// c.IndentedJSON(http.StatusOK, userDetails)
+	c.HTML(http.StatusOK, "users-data.html", gin.H{
+		"title" : "Users-Data-Log",
+		"message" : "Hello Users",
+	})
+
 }
 
 func GetUserByID(c *gin.Context) {
@@ -32,7 +32,7 @@ func GetUserByID(c *gin.Context) {
 		}
 	}
 
-	c.IndentedJSON(http.StatusNotFound, gin.H{"message" : "user not found"})
+	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "user not found"})
 }
 
 func CreateUser(c *gin.Context) {
@@ -48,11 +48,11 @@ func DeleteUserByID(c *gin.Context) {
 }
 
 func UserRoutes(r *gin.RouterGroup) {
-    r.GET("/", GetAllUser)
-    r.GET("/:id/", GetUserByID)
+	r.GET("/", GetAllUser)
+	r.GET("/:id/", GetUserByID)
 
-    r.POST("/", CreateUser)
-    r.PUT("/:id/", UpdateUserByID)
+	r.POST("/", CreateUser)
+	r.PUT("/:id/", UpdateUserByID)
 
-    r.DELETE("/:id/", DeleteUserByID)
+	r.DELETE("/:id/", DeleteUserByID)
 }
