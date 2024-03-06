@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var orgDetails = []details { 
+var orgDetails = []*Details { 
 	{ID: "1", Name: "TESLA", Adress: "USA", Email: "tesla@test.com"},
 	{ID: "2", Name: "TWITTER", Adress: "USA", Email: "tesla@test.com"},
 	{ID: "1", Name: "BORING", Adress: "USA", Email: "boring@test.com"},

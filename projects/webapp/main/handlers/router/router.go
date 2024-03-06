@@ -1,23 +1,27 @@
 package router
-
 import (
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 
 	uAuth "github.com/isantoshgyawali/apiWebGo/handlers/api"
 )
 
+//-- If the client accepts HTML, serve the HTML file
+//-- Otherwise, serve the JSON data
 func handleInitialRoute(c *gin.Context) {
-	// c.IndentedJSON(http.StatusOK, gin.H{"message": "hello world"})
-	c.HTML(http.StatusOK, "index.html", gin.H{
-		"title": "data-form",
-	})
+	if strings.Contains(c.GetHeader("Accept"), "text/html") {
+		c.HTML(http.StatusOK, "index.html", nil)
+	} else {
+		c.IndentedJSON(http.StatusOK, gin.H{
+			"title" : "Home | Add data",
+			"message": "what's up?",
+		})
+	}
 }
 
-/*
-*
-
+/**
 	Well there are already multiple things to consider to make a API a RESTfulApi
 	and addition to that from go - specifically gin Framework
 	we got some key points to consider :
@@ -25,7 +29,6 @@ func handleInitialRoute(c *gin.Context) {
 	-- use of trailing slashes should not be overlooked as I did
 	   user/login/ is different than user/login
 
-	   Yes, that is what it is : Interms of Gin I guess
 	   Framework redirect the user/login to user/login/ itself though
 
 	   but considering the consistent approach of using the "/" while using Gin
@@ -47,26 +50,35 @@ func handleInitialRoute(c *gin.Context) {
 */
 func RequestRouter() *gin.Engine {
 	r := gin.Default()
-
 	serveFiles(r)
 
-	r.GET("/", handleInitialRoute)
-	userGroup := r.Group("/user/")
-	uAuth.UserRoutes(userGroup)
+	r.GET("/", handleInitialRoute) //-- index page
+	userGroup := r.Group("/user/") //-- users | groups/page
+	uAuth.UserRoutes(userGroup)	
 
-	orgGrop := r.Group("/org/")
+	orgGrop := r.Group("/org/")    //-- org | groups/page
 	uAuth.OrgRoutes(orgGrop)
 
 	return r
 }
 
-func serveFiles(r *gin.Engine){
-	// r.StaticFS("/form", gin.Dir("../ui", true))
-	/**
-	 loading specific files - not good approach 
-	 r.LoadHTMLFiles("../ui/users-data.html") 
+func serveFiles(r *gin.Engine) {
 
-	 rather , serving the filePatterns from fs - DRY
+	/**
+		first serving the other static files like:
+		js, css, image , or other media using StaticFS from gin
+
+		then: UPDATE the link url in your html file to import them
+		in this case /app/static/style.css in ../ui/static/index.html
 	*/
-	r.LoadHTMLGlob("../ui/*")
+	r.StaticFS("/app/scripts/", gin.Dir("../ui/scripts/", true))
+	r.StaticFS("/app/static/", gin.Dir("../ui/static/", true))
+
+	/**
+		loading specific files - not good approach
+		r.LoadHTMLFiles("../ui/static/users-data.html")
+
+		rather , serving the filePatterns from fs - DRY
+	*/
+	r.LoadHTMLGlob("../ui/static/*")
 }

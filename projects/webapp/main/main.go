@@ -1,5 +1,4 @@
 package main
-
 import (
 	"log"
 
@@ -7,7 +6,8 @@ import (
 	"github.com/isantoshgyawali/apiWebGo/initializers"
 )
 
-//This runs even before the main function
+//-- This runs even before the main function 
+//-- Just Loading the env for now
 func init(){
 	initializers.LoadEnvVar()
 }
