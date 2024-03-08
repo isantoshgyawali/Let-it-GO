@@ -1,7 +1,9 @@
 package api
 
 import (
+	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -9,15 +11,23 @@ import (
 var orgDetails = []*Details { 
 	{ID: "1", Name: "TESLA", Adress: "USA", Email: "tesla@test.com"},
 	{ID: "2", Name: "TWITTER", Adress: "USA", Email: "tesla@test.com"},
-	{ID: "1", Name: "BORING", Adress: "USA", Email: "boring@test.com"},
+	{ID: "3", Name: "BORING", Adress: "USA", Email: "boring@test.com"},
 }
 
 func GetAllOrg(c *gin.Context) {
-	c.HTML(http.StatusOK, "org-data.html", gin.H{
-		"title": "Org-Data-log",
-		"message": "Hello Org",
-	})
+	if strings.Contains(c.GetHeader("Accept"), "application/json") {
+		users := append([]*Details{}, orgDetails...)
+		c.JSON(http.StatusOK, users)
 
+	} else if strings.Contains(c.GetHeader("Accept"), "text/html") {
+
+		c.HTML(http.StatusOK, "org-data.html", gin.H{
+			"title":   "org | Log",
+			"message": "org-Data-Log",
+		})
+	}
+
+	c.AbortWithError(http.StatusNotAcceptable, fmt.Errorf("requested content type is not acceptable"))
 }
 
 func GetOrgByID(c *gin.Context) {

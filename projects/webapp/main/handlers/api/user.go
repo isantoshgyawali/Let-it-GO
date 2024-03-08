@@ -47,17 +47,34 @@ func GetAllUsers( w http.ResponseWriter, r *http.Request ) {
 		w.Write(jsonData)
 	}
 
-	//serving static file
-
+	//-- serving static file
 	} else if strings.Contains(c.GetHeader("Accept"), "text/html") {
 		http.ServeFile(w, r, "users-data.html")
 	}
 }
+
+	//-- at ../router/router.go we should define the endpoints and start the server :
+	//-- ( we don't see any logs like in gin which uses middleware named logger(), so just print starting.... )
+
+	//-- Defining Port and checking if there is env storing them:
+
+	port := os.Getenv("PORT") //-- using os package from go std.library
+	if port == "" {
+		port = "8080" //-- default port if port are not defined/available in env
+	}
+
+	http.Handlefunc("/user/", GetAllUser
+	fmt.Println("starting.....")
+	http.ListenAndServe(":"+port, handler)
+
 */
 
 var userDetails = []*Details{
 	{ID: "1", Name: "Villiers", Adress: "SA", Email: "ab17@360.com"},
 	{ID: "2", Name: "McCullum", Adress: "NZ", Email: "brendon@42.com"},
+	{ID: "3", Name: "McCullum", Adress: "NZ", Email: "brendon@42.com"},
+	{ID: "4", Name: "McCullum", Adress: "NZ", Email: "brendon@42.com"},
+	{ID: "5", Name: "McCullum", Adress: "NZ", Email: "brendon@42.com"},
 }
 
 func GetAllUsers(c *gin.Context) {
@@ -74,16 +91,18 @@ func GetAllUsers(c *gin.Context) {
 		copying the userDetails, and send the
 		JSON response at the endpoint
 		*/
+		http.ListenAndServe(":8081", nil) //-- you could add message here instead of nil using http.ResponseWriter
 		users := append([]*Details{}, userDetails...)
 		c.JSON(http.StatusOK, users)
 
 	} else if strings.Contains(c.GetHeader("Accept"), "text/html") {
 
 		c.HTML(http.StatusOK, "users-data.html", gin.H{
-			"title":   "Users-Data-Log",
-			"message": "Hello Users",
+			"title":   "Users | Log",
+			"message": "Users-Data-Log",
 		})
 	}
+
 	// currently throws error if not matched any of these two but other format can be considered too
 	// and there are many headers in http related to security, request, response..... so remeber that too
 	c.AbortWithError(http.StatusNotAcceptable, fmt.Errorf("requested content type is not acceptable"))

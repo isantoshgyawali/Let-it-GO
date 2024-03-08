@@ -81,4 +81,12 @@ func serveFiles(r *gin.Engine) {
 		rather , serving the filePatterns from fs - DRY
 	*/
 	r.LoadHTMLGlob("../ui/static/*")
+
+	//-- Ignoring favicon.ico request for now
+	r.NoRoute(func(c *gin.Context) {
+		if strings.Contains(c.Request.URL.Path, "favicon.ico") {
+			c.Status(http.StatusNoContent)
+			return
+		}
+	})
 }

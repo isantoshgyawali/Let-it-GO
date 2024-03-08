@@ -14,9 +14,14 @@
 </head>
 <body>
     <div class="container">
-        <div class="user-list"></div>
-        <p>{{ .message }}</p>
-        <ul class="data-list user-data"></ul>
+        <div class="users-list">
+            <input hidden id="hidden-message" value="{{ .message }}">
+            <p class="user-list-title"></p>
+            <ul class="data-list user-data">
+                <!-- Each user will be added dynamically here -->
+            </ul>
+            <button class="delete-all">Delete all</button>
+        </div>
     </div>
 </body>
 </html>

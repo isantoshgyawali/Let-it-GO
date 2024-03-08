@@ -6,15 +6,22 @@
     <title>{{ .title }}</title>
 
     <link rel="stylesheet" href="/app/static/style.css">
+
+    <!-- scripts -->
+    <script src="/app/scripts/org.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
+
 <body>
     <div class="container">
-        <div class="org-list"></div>
-        <p>
-            {{ .message }}
-        </p>
+        <div class="orgs-list">
+            <input hidden id="hidden-message" value="{{ .message }}">
+            <p class="org-list-title"></p>
+            <ul class="data-list org-data">
+                <!-- Each user will be added dynamically here -->
+            </ul>
+            <button class="delete-all">Delete all</button>
+        </div>
     </div>
-    
-    <script type="module" src="/app/scripts/org.js"></script>
 </body>
 </html>
