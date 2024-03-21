@@ -14,7 +14,6 @@
 
 * a {
   cursor: pointer;
-  color: green;
 }
 
 .container {
@@ -126,19 +125,25 @@
   display: flex;
   justify-content: space-between;
   margin-bottom: 1rem;
-  border: 2px solid ;
-  border-radius: 1rem;
-  padding: 0.5rem;
-  font-weight: bold;
+  /* border: 2px solid ; */
 }
 
 .users-list .data-list .user a {
-  color: royalblue;
+  font-weight: 900;
+  border: 1px solid black;
+  width: 80%;
+  border-radius: 1rem;
+  padding: 0.5rem 2rem;
 }
 
 .user-data  button {
-  margin-top: 0.5rem;
+  border-radius: 1rem;
+  padding: 0.5rem;
   cursor: pointer;
+  width: 17%;
+
+  border: 1px solid red;
+  background-color: rgba(255, 0, 0, 0.100);
 }
 
 .delete-all {
@@ -178,20 +183,31 @@
 }
 
 .orgs-list .data-list {
-  padding: 2rem;
+  padding: 2rem
+  /* background: #000; */
 }
 
 .orgs-list .data-list .org {
   display: flex;
   justify-content: space-between;
   margin-bottom: 1rem;
-  border: 2px solid ;
-  border-radius: 1rem;
-  padding: 0.5rem;
+  /* border: 2px solid ; */
 }
 
+.orgs-list .data-list a {
+  font-weight: 900;
+  border: 1px solid black;
+  width: 80%;
+  border-radius: 1rem;
+  padding: 0.5rem 2rem;
+}
 
 .org-data  button {
-  margin-top: 0.5rem;
+  border-radius: 1rem;
+  padding: 0.5rem;
   cursor: pointer;
+  width: 17%;
+
+  border: 1px solid red;
+  background-color: rgba(255, 0, 0, 0.100);
 }

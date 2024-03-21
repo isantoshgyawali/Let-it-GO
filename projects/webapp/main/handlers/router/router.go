@@ -53,6 +53,7 @@ func RequestRouter() *gin.Engine {
 	serveFiles(r)
 
 	r.GET("/", handleInitialRoute) //-- index page
+
 	userGroup := r.Group("/user/") //-- users | groups/page
 	uAuth.UserRoutes(userGroup)	
 

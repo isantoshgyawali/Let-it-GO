@@ -3,6 +3,7 @@ package api
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -70,11 +71,9 @@ func GetAllUsers( w http.ResponseWriter, r *http.Request ) {
 */
 
 var userDetails = []*Details{
-	{ID: "1", Name: "Villiers", Adress: "SA", Email: "ab17@360.com"},
-	{ID: "2", Name: "McCullum", Adress: "NZ", Email: "brendon@42.com"},
-	{ID: "3", Name: "McCullum", Adress: "NZ", Email: "brendon@42.com"},
-	{ID: "4", Name: "McCullum", Adress: "NZ", Email: "brendon@42.com"},
-	{ID: "5", Name: "McCullum", Adress: "NZ", Email: "brendon@42.com"},
+	{ID: 1, Name:  "Villiers", Adress: "SA", Email: "ab17@360.com"},
+	{ID: 2, Name: "McCullum", Adress: "NZ", Email: "brendon@42.com"},
+	{ID: 3, Name: "McCullum", Adress: "NZ", Email: "brendon@42.com"},
 }
 
 func GetAllUsers(c *gin.Context) {
@@ -88,12 +87,11 @@ func GetAllUsers(c *gin.Context) {
 	*/
 	if strings.Contains(c.GetHeader("Accept"), "application/json") {
 		/**
-		copying the userDetails, and send the
-		JSON response at the endpoint
+		* copying the userDetails, and send the
+		* JSON response at the endpoint
 		*/
 		http.ListenAndServe(":8081", nil) //-- you could add message here instead of nil using http.ResponseWriter
-		users := append([]*Details{}, userDetails...)
-		c.JSON(http.StatusOK, users)
+		c.JSON(http.StatusOK, userDetails)
 
 	} else if strings.Contains(c.GetHeader("Accept"), "text/html") {
 
@@ -103,44 +101,52 @@ func GetAllUsers(c *gin.Context) {
 		})
 	}
 
-	// currently throws error if not matched any of these two but other format can be considered too
+	// we can throw error if not matched any of these but other format can be considered too
 	// and there are many headers in http related to security, request, response..... so remeber that too
-	c.AbortWithError(http.StatusNotAcceptable, fmt.Errorf("requested content type is not acceptable"))
+	//
+	//--------------- throw error if necessary -------------------------------
+	// c.AbortWithError(http.StatusNotAcceptable, fmt.Errorf("requested content type is not acceptable"))
 
-	//Generally RestFul Api designs prioritize doing one thing at one endpoint so : you may consider that too....
+	//self-note : Generally RestFul Api designs prioritize doing one thing at one endpoint so : you might consider that too....
 }
 
 func GetUserByID(c *gin.Context) {
 	id := c.Param("id")
 
-	for _, v := range userDetails {
-		if v.ID == id {
-			c.JSON(http.StatusOK, v)
+	for _, user := range userDetails {
+		if strconv.Itoa(user.ID) == id {
+			c.JSON(http.StatusOK, user)
 			return
 		}
 	}
-
 	c.JSON(http.StatusNotFound, gin.H{"message": "user not found"})
 }
 
 func CreateUser(c *gin.Context) {
-
-}
-
-func UpdateUserByID(c *gin.Context) {
-
+	formData, err := GetFormData(c)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error occured": err.Error()})
+	}
+	// formData = append(formData, &Details{ID: len(userDetails)})
+	userDetails = append(userDetails, formData)
+	fmt.Println(*userDetails[len(userDetails)-1])
 }
 
 func DeleteUserByID(c *gin.Context) {
-
+	id := c.Param("id")
+	for _, user := range userDetails {
+		if strconv.Itoa(user.ID) == id {
+			c.JSON(http.StatusOK, user)
+			return
+		}
+	}
+	c.JSON(http.StatusNotFound, gin.H{"message": "user not found"})
 }
 
 func UserRoutes(r *gin.RouterGroup) {
 	r.GET("/", GetAllUsers)
 	r.GET("/:id/", GetUserByID)
-
 	r.POST("/", CreateUser)
-	r.PUT("/:id/", UpdateUserByID)
-
+	// r.PUT("/:id/", UpdateUserByID) //-- nothing to update currently
 	r.DELETE("/:id/", DeleteUserByID)
 }

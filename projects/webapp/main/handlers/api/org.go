@@ -3,15 +3,16 @@ package api
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
 )
 
 var orgDetails = []*Details { 
-	{ID: "1", Name: "TESLA", Adress: "USA", Email: "tesla@test.com"},
-	{ID: "2", Name: "TWITTER", Adress: "USA", Email: "tesla@test.com"},
-	{ID: "3", Name: "BORING", Adress: "USA", Email: "boring@test.com"},
+	{ Name: "TESLA", Adress: "USA", Email: "tesla@test.com"},
+	{ Name: "TWITTER", Adress: "USA", Email: "tesla@test.com"},
+	{ Name: "BORING", Adress: "USA", Email: "boring@test.com"},
 }
 
 func GetAllOrg(c *gin.Context) {
@@ -32,27 +33,33 @@ func GetAllOrg(c *gin.Context) {
 
 func GetOrgByID(c *gin.Context) {
 	id := c.Param("id")
-
-	for _, v := range orgDetails{
-		if v.ID == id {
-			c.IndentedJSON(http.StatusOK, v)
+	for _, org := range orgDetails{
+		if strconv.Itoa(org.ID) == id {
+			c.IndentedJSON(http.StatusOK, org)
 			return
 		}
 	}
-
 	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "org not found"})
 }
 
 func CreateOrg(c *gin.Context) {
-
-}
-
-func UpdateOrgByID(c *gin.Context) {
-
+	formData, err := GetFormData(c)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error occured": err.Error()})
+	}
+	orgDetails = append(orgDetails, formData)
+	fmt.Println(*orgDetails[len(orgDetails)-1])
 }
 
 func DeleteOrgByID(c *gin.Context) {
-
+	id := c.Param("id")
+	for _, org := range orgDetails{
+		if strconv.Itoa(org.ID) == id {
+			c.IndentedJSON(http.StatusOK, org)
+			return
+		}
+	}
+	c.IndentedJSON(http.StatusNotFound, gin.H{"message": "org not found"})
 }
 
 func OrgRoutes(r *gin.RouterGroup) {
@@ -60,7 +67,7 @@ func OrgRoutes(r *gin.RouterGroup) {
 	r.GET("/:id/", GetOrgByID)
 
 	r.POST("/", CreateOrg)
-	r.PUT("/:id/", UpdateOrgByID)
-
 	r.DELETE("/:id/", DeleteOrgByID)
+
+	// r.PUT("/:id/", UpdateOrgByID) //-- nothing to do here for now
 }

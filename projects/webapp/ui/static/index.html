@@ -24,9 +24,9 @@
 
 <body>
     <div class="container">
-        <form id="mainForm" method="post" action="/">
+        <form id="mainForm">
             <div class="userInput">
-                <select id="chooseOptions" name="selections">
+                <select id="chooseOptions" name="type">
                     <option value="User">User</option>
                     <option value="Org">Org</option>
                 </select>
@@ -41,7 +41,7 @@
                 <label for="email">email: </label>
                 <input type="text" name="email" id="email" class="inputBox">
             </div>
-                <input type="button" class="addData" value="Add Data" onclick="submitForm()" />
+                <input type="submit" class="addData" value="Add Data" />
         </form>
 
         <div class="gotoBtn">

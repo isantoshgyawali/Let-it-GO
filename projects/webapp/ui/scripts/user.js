@@ -30,19 +30,32 @@ const listUserData = async () => {
         const userlist = document.createElement("li");
         userlist.classList.add("user")
         
-        // Anchor tag for user details
+        //-- Anchor tag for user details
         const userLink = document.createElement("a");
         const userDetails = document.createElement("p");
         userDetails.textContent = `${user.id}. ${user.name}`;
         userLink.appendChild(userDetails);
         userlist.appendChild(userLink);
+        
+        //-- if there is the click on the any of the specific user 
+        //-- then fire the function userRedirect
+        userLink.addEventListener("click", () => {
+          console.log(user)
+          userRedirect(user.id)
+        })
 
-        // delete button for specific users
+        //-- delete specific users on click
         const deleteButton = document.createElement("button");
         deleteButton.textContent = "Delete";
         deleteButton.classList.add("delete-btn");
         deleteButton.classList.add("delete-user");
         userlist.appendChild(deleteButton);
+
+        //-- if the button is clicked then the user data from the database
+        //-- is cleared and the data is then remove the ui too
+        deleteButton.addEventListener("click", () => {
+          deleteUser(user.id)
+        })
 
         UserListUl.appendChild(userlist);
       });
@@ -63,3 +76,10 @@ if (window.location.pathname === "/user/") {
   listUserData();
 }
 
+const userRedirect= (id) => {
+  window.location.href = `/user/${id}/`
+}
+
+const deleteUser = (id) => {
+  console.log("delete")
+}
