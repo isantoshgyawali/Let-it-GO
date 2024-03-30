@@ -30,7 +30,11 @@ func GetFormData(c *gin.Context) (*Details, error) {
 	if err := c.BindJSON(&formData); err != nil {
 		return nil, err
 	}
-	userDetails = append(userDetails, formData)
-
+	//-- adding && updating id as it is not coming from the form
+	formData.ID = len(userDetails) + 1
 	return formData, nil
+}
+
+func UpdateFormOnDB(){
+	fmt.Println()
 }

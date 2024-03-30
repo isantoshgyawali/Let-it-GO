@@ -1,2 +1,2 @@
 DELETE FROM root.users
-WHERE id = 1;
+WHERE id = i;

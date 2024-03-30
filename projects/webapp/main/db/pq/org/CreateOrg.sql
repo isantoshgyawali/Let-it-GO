@@ -1,4 +1,0 @@
-CREATE TABLE IF NOT EXISTS root.org (
-    
-    name VARCHAR(255) NOT NULL
-)
