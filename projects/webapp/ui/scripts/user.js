@@ -1,8 +1,5 @@
 const baseUrl = "http://localhost:6969";
 
-const goToUser = () => {
-  window.location.href = "/user/";
-};
 
 const fetchUserData = (fetchUrl) => {
   return axios
