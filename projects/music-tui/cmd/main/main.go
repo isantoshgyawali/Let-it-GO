@@ -1,139 +1,84 @@
 package main
 
-/* import (
-	"fmt"
-        "os"
+import (
+	"errors"
+	"strings"
+	"time"
 
-    tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/bubbles/filepicker"
+	tea "github.com/charmbracelet/bubbletea"
 )
 
 type model struct {
-    choices  []string           // items on the to-do list
-    cursor   int                // which to-do list item our cursor is pointing at
-    selected map[int]struct{}   // which to-do items are selected
+	filepicker   filepicker.Model
+	selectedFile string
+	quitting     bool
+	err          error
 }
 
-func initialModel() model {
-	return model {
-		// Our to-do list is a grocery list
-		choices:  []string{"Buy carrots", "Buy celery", "Buy kohlrabi"},
+type clearErrorMsg struct{}
 
-		// A map which indicates which choices are selected. We're using
-		// the  map like a mathematical set. The keys refer to the indexes
-		// of the `choices` slice, above.
-		selected: make(map[int]struct{}),
-	}
+func clearErrorAfter(t time.Duration) tea.Cmd {
+	return tea.Tick(t, func(_ time.Time) tea.Msg {
+		return clearErrorMsg{}
+	})
 }
 
 func (m model) Init() tea.Cmd {
-    // Just return `nil`, which means "no I/O right now, please."
-    return nil
-}
-
-func (m model) View() string {
-    // The header
-    s := "What should we buy at the market?\n\n"
-
-    // Iterate over our choices
-    for i, choice := range m.choices {
-
-        // Is the cursor pointing at this choice?
-        cursor := " " // no cursor
-        if m.cursor == i {
-            cursor = ">" // cursor!
-        }
-
-        // Is this choice selected?
-        checked := " " // not selected
-        if _, ok := m.selected[i]; ok {
-            checked = "x" // selected!
-        }
-
-        // Render the row
-        s += fmt.Sprintf("%s [%s] %s\n", cursor, checked, choice)
-    }
-
-    // The footer
-    s += "\nPress q to quit.\n"
-
-    // Send the UI for rendering
-    return s
+	return m.filepicker.Init()
 }
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-    switch msg := msg.(type) {
-
-    // Is it a key press?
-    case tea.KeyMsg:
-
-        // Cool, what was the actual key pressed?
-        switch msg.String() {
-
-        // These keys should exit the program.
-        case "ctrl+c", "q":
-            return m, tea.Quit
-
-        // The "up" and "k" keys move the cursor up
-        case "up", "k":
-            if m.cursor > 0 {
-                m.cursor--
-            }
-
-        // The "down" and "j" keys move the cursor down
-        case "down", "j":
-            if m.cursor < len(m.choices)-1 {
-                m.cursor++
-            }
-
-        // The "enter" key and the spacebar (a literal space) toggle
-        // the selected state for the item that the cursor is pointing at.
-        case "enter", " ":
-            _, ok := m.selected[m.cursor]
-            if ok {
-                delete(m.selected, m.cursor)
-            } else {
-                m.selected[m.cursor] = struct{}{}
-            }
-        }
-    }
-
-    // Return the updated model to the Bubble Tea runtime for processing.
-    // Note that we're not returning a command.
-    return m, nil
-}
-
-func main() {
-    p := tea.NewProgram(initialModel())
-    if _, err := p.Run(); err != nil {
-        fmt.Printf("Alas, there's been an error: %v", err)
-        os.Exit(1)
-    }
-}
-*/
-
-import (
-	"github.com/isantoshgyawali/music-tui/pkg/utils"
-)
-
-func main() {
-	/* idx, err := fuzzyfinder.FindMulti(
-		tracks,
-		func(i int) string {
-			return tracks[i].Name
-		},
-		fuzzyfinder.WithPreviewWindow(func(i, w, h int) string {
-			if i == -1 {
-				return ""
-			}
-			return fmt.Sprintf("Track: %s (%s)\nAlbum: %s",
-				tracks[i].Name,
-				tracks[i].Artist,
-				tracks[i].AlbumName)
-		}))
-	if err != nil {
-		log.Fatal(err)
+	switch msg := msg.(type) {
+	case tea.KeyMsg:
+		switch msg.String() {
+		case "ctrl+c", "q":
+			m.quitting = true
+			return m, tea.Quit
+		}
+	case clearErrorMsg:
+		m.err = nil
 	}
-	fmt.Printf("selected: %v\n", idx) */
-    fmt.Print("hello")
-    utils.SelectDIR()
+
+	var cmd tea.Cmd
+	m.filepicker, cmd = m.filepicker.Update(msg)
+
+	// Did the user select a file?
+	if didSelect, path := m.filepicker.DidSelectFile(msg); didSelect {
+		// Get the path of the selected file.
+		m.selectedFile = path
+	}
+
+	// Did the user select a disabled file?
+	// This is only necessary to display an error to the user.
+	if didSelect, path := m.filepicker.DidSelectDisabledFile(msg); didSelect {
+		// Let's clear the selectedFile and display an error.
+		m.err = errors.New(path + " is not valid.")
+		m.selectedFile = ""
+		return m, tea.Batch(cmd, clearErrorAfter(2*time.Second))
+	}
+
+	return m, cmd
+}
+
+func (m model) View() string {
+	if m.quitting {
+		return ""
+	}
+	var s strings.Builder
+	s.WriteString("\n  ")
+	if m.err != nil {
+		s.WriteString(m.filepicker.Styles.DisabledFile.Render(m.err.Error()))
+	} else if m.selectedFile == "" {
+		s.WriteString("Pick a file:")
+	} else {
+		s.WriteString("Selected file: " + m.filepicker.Styles.Selected.Render(m.selectedFile))
+	}
+	s.WriteString("\n\n" + m.filepicker.View() + "\n")
+	return s.String()
+}
+
+func main() {
+	fp := filepicker.New()
+        fp.View()
 }
