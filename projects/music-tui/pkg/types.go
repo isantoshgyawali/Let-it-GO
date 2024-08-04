@@ -1,7 +1,10 @@
 package pkg
 
 type Model struct {
-	choices  []string
-	cursor   int
-	selected map[int]struct{}
+    SearchInput string
+
+    Songs []string
+    Cursor int
+    width int 
+    height int
 }

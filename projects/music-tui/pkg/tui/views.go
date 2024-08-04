@@ -2,90 +2,55 @@ package tui
 
 import (
 	"fmt"
-
-	tea "github.com/charmbracelet/bubbletea"
+	"strings"
 )
 
-func InitialModel() model {
-    return model {
-        choices:  []string{"Buy carrots", "Buy celery", "Buy kohlrabi"},
-        selected: make(map[int]struct{}), 
-    }
-
+/*
+   func NavBarView returns
+   the Navbar for navigating to other features
+   in the programs like yt_downloader, maybe syncDevices
+*/
+func NavBarView(height, width int) string {
+    return NavBarStyle(height, width).Render()
 }
 
-func (m model) Init() tea.Cmd {
-    return nil
+/* 
+    func SongsListContatinerView returns 
+    List of Songs adding into a View with 
+    MainContentStyles defined on: package tui > const.go
+*/
+func SongsListContatinerView(height int, width int, songs []string) string {
+    s := strings.Builder{}
+    for i, song := range songs{ 
+        s.WriteString(fmt.Sprintf("%d. %s\n",i+1,song))
+    }
+    
+    return MaiContentStyle(height, width).Render(s.String())
 }
 
-func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-    switch msg := msg.(type) {
-
-    // Is it a key press?
-    case tea.KeyMsg:
-
-        // Cool, what was the actual key pressed?
-        switch msg.String() {
-
-        // These keys should exit the program.
-        case "ctrl+c", "q":
-            return m, tea.Quit
-
-        // The "up" and "k" keys move the cursor up
-        case "up", "k":
-            if m.cursor > 0 {
-                m.cursor--
-            }
-
-        // The "down" and "j" keys move the cursor down
-        case "down", "j":
-            if m.cursor < len(m.choices)-1 {
-                m.cursor++
-            }
-
-        // The "enter" key and the spacebar (a literal space) toggle
-        // the selected state for the item that the cursor is pointing at.
-        case "enter", " ":
-            _, ok := m.selected[m.cursor]
-            if ok {
-                delete(m.selected, m.cursor)
-            } else {
-                m.selected[m.cursor] = struct{}{}
-            }
-        }
-    }
-
-    // Return the updated model to the Bubble Tea runtime for processing.
-    // Note that we're not returning a command.
-    return m, nil
+/*
+    func SideBarView returns 
+    the SideBar which contains options for 
+    playlists, favourites ... 
+*/
+func SideBarView(height, width int) string {
+    return SideBarStyle(height, width).Render()
 }
 
-func (m model) View() string {
-    // The header
-    s := "What should we buy at the market?\n\n"
+/*
+    func HelpView returns
+    the helping footNotes to navigate and access
+    other components ie. Views and options like add, select, delete, find ....
+*/
+func HelpView(height, width int) string {
+    return HelpContentStyle(height, width).Render()
+}
 
-    // Iterate over our choices
-    for i, choice := range m.choices {
-
-        // Is the cursor pointing at this choice?
-        cursor := " " // no cursor
-        if m.cursor == i {
-            cursor = ">" // cursor!
-        }
-
-        // Is this choice selected?
-        checked := " " // not selected
-        if _, ok := m.selected[i]; ok {
-            checked = "x" // selected!
-        }
-
-        // Render the row
-        s += fmt.Sprintf("%s [%s] %s\n", cursor, checked, choice)
-    }
-
-    // The footer
-    s += "\nPress q to quit.\n"
-
-    // Send the UI for rendering
-    return s
+/*
+    func VisualizerView returns
+    visualizer something like cava while 
+    music is being played or maybe details about the songs
+*/
+func VisualizerView(height, width int) string {
+    return VisualizerStyle(height, width).Render()
 }

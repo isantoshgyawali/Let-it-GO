@@ -98,8 +98,28 @@ func SelectDIR() {
     }
 }
 
-func GetSongs() {
+func GetSongs() ([]string, error){
+    var songs []string
+    err := filepath.WalkDir("/home/cosnate/songs", func(path string, d fs.DirEntry, err error) error {
+        if err != nil {
+            fmt.Printf("Error accessing path %q: %v\n", path, err)
+            return err
+        }
+        
+        if !d.IsDir() {
+            if strings.ToLower(filepath.Ext(path)) == ".mp3" {
+                fileName := filepath.Base(path)
+                songs = append(songs, fileName) 
+            }
+        }
+        return nil
+    })
 
+    if err != nil {
+        return nil, fmt.Errorf("Error walking to the file path [utils.go, GetSongs]\n %+v", err)
+    }
+
+    return songs, nil
 }
 
 func YoutubeDownloader() {
