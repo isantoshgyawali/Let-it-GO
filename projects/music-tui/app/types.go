@@ -1,4 +1,4 @@
-package pkg
+package app
 
 type Model struct {
     SearchInput string

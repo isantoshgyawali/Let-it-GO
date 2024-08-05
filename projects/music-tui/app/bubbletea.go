@@ -1,12 +1,11 @@
-package pkg
+package app
 
 import (
-    "fmt"
+	"fmt"
 
-    tea "github.com/charmbracelet/bubbletea"
-    "github.com/charmbracelet/lipgloss"
-    "github.com/isantoshgyawali/music-tui/pkg/tui"
-    "github.com/isantoshgyawali/music-tui/pkg/utils"
+	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
+	"github.com/isantoshgyawali/music-tui/utils"
 )
 
 func InitialModel() *Model {
@@ -73,14 +72,14 @@ func (m *Model) View() string {
         }
     }
 
-    ParentContainer := tui.ScreenContainerStyle(m.height,m.width)
+    ParentContainer := ScreenContainerStyle(m.height,m.width)
 
-    topContent := tui.NavBarView(m.height, m.width)
-    bottomContent := tui.HelpView(m.height, m.width)
+    topContent := NavBarView(m.height, m.width)
+    bottomContent := HelpView(m.height, m.width)
 
     centerHeight := m.height - (lipgloss.Height(topContent) + lipgloss.Height(bottomContent))
-    SideBarView := tui.SideBarView(centerHeight, m.width)
-    visualizerContent := tui.VisualizerView(centerHeight, m.width)
+    SideBarView := SideBarView(centerHeight, m.width)
+    visualizerContent := VisualizerView(centerHeight, m.width)
     leftSideContent := lipgloss.JoinVertical(
             lipgloss.Center,
             SideBarView,
@@ -90,7 +89,7 @@ func (m *Model) View() string {
     songsContainerWidth := m.width - lipgloss.Width(SideBarView)
     centerContent := lipgloss.JoinHorizontal(
         lipgloss.Top,
-        tui.SongsListContatinerView(centerHeight, songsContainerWidth, m.Songs),
+        SongsListContatinerView(centerHeight, songsContainerWidth, m.Songs),
         leftSideContent,
         )
 
