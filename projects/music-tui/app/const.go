@@ -8,40 +8,29 @@ const (
     SECONDARY = lipgloss.Color("")
     TERTIARY = lipgloss.Color("#f5f5f5")
 
-    HIGHLIGHTER = lipgloss.Color("")
+    HIGHLIGHTER = lipgloss.Color("#0ac123")
     SUCCESS = lipgloss.Color("")
     DANGER = lipgloss.Color("")
 )
 
-/* TEXT STYLES */
+// LIST STYLES 
 var (
-    titleTextStyles = lipgloss.NewStyle(). 
-        Background(lipgloss.Color(HIGHLIGHTER)).
-        Foreground(lipgloss.Color(PRIMARY)). 
-        Bold(true)
+    GeneralListStyle = lipgloss.NewStyle().
+        MarginBottom(1)
 
-    highlightedTextStyles = lipgloss.NewStyle(). 
-        Background(lipgloss.Color(TERTIARY)). 
-        Foreground(lipgloss.Color(PRIMARY))
-
-    footNoteTextStyles = lipgloss.NewStyle()
-)
-
-/* BACKGROUND STYLES */
-var (
-    primaryBackgroundStyles = lipgloss.NewStyle().Background(PRIMARY)
-    secondaryBackgroundStyles = lipgloss.NewStyle().Background(SECONDARY)
-
-    highlighedBackgroundStyles = lipgloss.NewStyle().Background(HIGHLIGHTER)
+    SelectedListStyle = lipgloss.NewStyle().
+        Background(lipgloss.Color("#808080")).
+        Foreground(lipgloss.Color("#ffffff")).
+        MarginBottom(1)
 )
 
 /* BORDER STYLES */
 func tabBorderWithBottom(left, middle, right string) lipgloss.Border {
-	border := lipgloss.RoundedBorder()
-	border.BottomLeft = left
-	border.Bottom = middle
-	border.BottomRight = right
-	return border
+    border := lipgloss.RoundedBorder()
+    border.BottomLeft = left
+    border.Bottom = middle
+    border.BottomRight = right
+    return border
 }
 
 var (
@@ -73,14 +62,15 @@ func NavBarStyle(height, width int) lipgloss.Style {
 }
 
 // SIMILARY, FOR MAIN_CONTENT ie. SongsContainer
-func MaiContentStyle(height, width int) lipgloss.Style {
+func MainContentStyle(height, width int) lipgloss.Style {
     return lipgloss.NewStyle(). 
-        Background(lipgloss.Color("#0ac123")).
+        Background(lipgloss.Color("")).
         Border(lipgloss.RoundedBorder()).
         BorderForeground(PRIMARY).
-        Padding(1,3,1,3).
+        Padding(1,2).
         Width(width - 5).
-        Height(height - 5)
+        MaxHeight(height - 2)
+
 }
 
 // FOR SIDEBARS
@@ -109,7 +99,6 @@ func HelpContentStyle(height, width int) lipgloss.Style {
         Background(lipgloss.Color("#cbc123")).
         Border(lipgloss.RoundedBorder()).
         BorderForeground(PRIMARY).
-        Padding(1).
         Width(width - 5)
 }
 

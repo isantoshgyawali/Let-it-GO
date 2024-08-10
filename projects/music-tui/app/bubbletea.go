@@ -15,8 +15,13 @@ func InitialModel() *Model {
     }
 
     return &Model{
-        Songs: ListOfSongs, 
-        Cursor: 0,
+        Songs: &Songs{
+            SongsList: ListOfSongs,
+        }, 
+
+        Layout: &Layout{
+            Cursor: 0,
+        },
     }
 }
 
@@ -42,12 +47,12 @@ func (m *Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
         case tea.KeyRunes: 
             switch string(msg.Runes) {
             case "j", "down": 
-                if m.Cursor < len(m.Songs)-1 {
-                    m.Cursor++
+                if m.Layout.Cursor < len(m.Songs.SongsList)-1 {
+                    m.Layout.Cursor++
                 }  
             case "k", "up": 
-                if m.Cursor > 0 {
-                    m.Cursor--
+                if m.Layout.Cursor > 0 {
+                    m.Layout.Cursor--
                 }  
         }
     }
@@ -55,41 +60,32 @@ func (m *Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
     // updates initially with the window dimensions then updates on each window resizes 
     // for "WINDOWS", this does nothing on resize as it doesn't support SIGWINCH signal [ copied from LSP ]
     case tea.WindowSizeMsg:
-        m.height = msg.Height
-        m.width = msg.Width
+        m.Layout.Height = msg.Height
+        m.Layout.Width = msg.Width
 
 }
     return m, nil
 }
 
 func (m *Model) View() string {
-    songsList := make([]string, len(m.Songs))
-    for i, song := range m.Songs {
-        if i == m.Cursor {
-            songsList[i] = "> " + song
-        } else {
-            songsList[i] = " " + song
-        }
-    }
+    ParentContainer := ScreenContainerStyle(m.Layout.Height,m.Layout.Width) // ParentContainer: Inside which Every other containers are aligned
+    topContent := NavBarView(m) // TopContent:    Where every other features are introduced like yt_downloader
+    bottomContent := HelpView(m)// BottomContent: Where resides the help section
 
-    ParentContainer := ScreenContainerStyle(m.height,m.width)
-
-    topContent := NavBarView(m.height, m.width)
-    bottomContent := HelpView(m.height, m.width)
-
-    centerHeight := m.height - (lipgloss.Height(topContent) + lipgloss.Height(bottomContent))
-    SideBarView := SideBarView(centerHeight, m.width)
-    visualizerContent := VisualizerView(centerHeight, m.width)
+    SideBarView := SideBarView(m)
+    visualizerContent := VisualizerView(m)
     leftSideContent := lipgloss.JoinVertical(
             lipgloss.Center,
             SideBarView,
             visualizerContent,
         )
 
-    songsContainerWidth := m.width - lipgloss.Width(SideBarView)
+
+    songsContainerHeight := m.Layout.Height - (lipgloss.Height(topContent) + lipgloss.Height(bottomContent))
+    songsContainerWidth := m.Layout.Width - lipgloss.Width(SideBarView)
     centerContent := lipgloss.JoinHorizontal(
         lipgloss.Top,
-        SongsListContatinerView(centerHeight, songsContainerWidth, m.Songs),
+        SongsListContatinerView(m, songsContainerHeight, songsContainerWidth),
         leftSideContent,
         )
 
