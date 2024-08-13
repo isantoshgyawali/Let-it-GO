@@ -8,8 +8,8 @@ import (
 )
 
 func main() {
-    p := tea.NewProgram(app.InitialModel(), tea.WithAltScreen())
-    if _, err := p.Run(); err != nil {
-        fmt.Printf("Error running program: \n %+v", err)
-    }
+	p := tea.NewProgram(app.InitialModel(), tea.WithAltScreen())
+	if _, err := p.Run(); err != nil {
+		fmt.Printf("Error running program: \n %+v", err)
+	}
 }

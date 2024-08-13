@@ -1,33 +1,39 @@
 package app
 
-type Model struct {
-    SearchInput string
+import (
+	"github.com/charmbracelet/lipgloss"
+	"github.com/isantoshgyawali/music-tui/utils"
+)
 
-    Layout *Layout
-    Songs *Songs
-    Help *Help
+type Model struct {
+	SearchInput string
+        Player    *utils.Player
+
+	Layout *Layout
+	Songs  *Songs
+	Help   *Help
 }
 
 type Layout struct {
-    Height int
-    Width int
+	Height int
+	Width  int
+	Cursor int
 
-    Cursor int
+	VisualizerHeight      int
+	VisualizerWidth       int
+	VisualizerColorScheme lipgloss.Color
 
-    VisualizerHeight int 
-    VisualizerWidth int 
-    VisualizerColorScheme string 
+	SongsListScrollOffset int
+	SongsListViewHeight   int
 }
 
 type Help struct {
-     
 }
 
 type Songs struct {
-    SongsList []string
-    Downloads []string
+	SongsList []string
+	Downloads []string
 
-    Favorite []string   
-    Playlist []string
-
+	Favorite []string
+	Playlist []string
 }
