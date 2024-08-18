@@ -1,13 +1,12 @@
 package utils
 
 import (
-	"fmt"
-	"os"
-	"sync"
-	"time"
+    "fmt"
+    "os"
+    "time"
 
-	"github.com/ebitengine/oto/v3"
-	"github.com/hajimehoshi/go-mp3"
+    "github.com/ebitengine/oto/v3"
+    "github.com/hajimehoshi/go-mp3"
 )
 
 type Player struct {
@@ -17,7 +16,6 @@ type Player struct {
     volume float32
     speed  float32
     ready chan struct{}
-    mutex sync.Mutex
 }
 
 func NewPlayer() (*Player, error) {
@@ -28,14 +26,15 @@ func NewPlayer() (*Player, error) {
         SampleRate:   44100,
 
         // no. of channels to play sound from, 1: mono sound && 2: stereo sound
-        // If only one speaker is available then the sound will be downmixed by OS or hardware itself
-        // no harm is caused but some effects like panning[sound movement from one speaker to another] will not function due to downmixing
+        // When settin the count to 2 and If only one speaker is available then the sound 
+        // will be downmixed by OS or hardware itself no harm is caused but some effects 
+        // like panning[sound movement from one speaker to another] will not function due to downmixin
         ChannelCount: 2,     
         Format: oto.FormatSignedInt16LE,
     }
 
     // Remember "not" to create more than one context
-    // reason could be :
+    // because :
     //  resouce management : reating multiple audio contexts can lead to excessive consumption of system resources
     //  audio device conflicts
     //  synchronization issues
@@ -56,8 +55,8 @@ func NewPlayer() (*Player, error) {
 
 func (p *Player) PlaySong(song *os.File) error {
 
-    p.mutex.Lock()
-    defer p.mutex.Unlock()
+    // p.mutex.Lock()
+    // defer p.mutex.Unlock()
 
     // Close player if already running 
     // to avoid resource conflicts and playback error while switching songs
@@ -67,7 +66,7 @@ func (p *Player) PlaySong(song *os.File) error {
 
     // THIS IS SLOW FOR LONGER SONGS because loading long songs on memory and decoding complete file is 
     // inefficient losing performance 
-    // SO JUST OPEN FILE AND DECODE
+    // SO JUST OPEN FILE AND DECODE basically "doing streaming"
 
     // fileBytes, err := io.ReadAll(song)
     // if err != nil {
@@ -88,28 +87,21 @@ func (p *Player) PlaySong(song *os.File) error {
     p.CurrentPlayer.Play()
 
     // MONITOR PLAYBACK
-        fmt.Printf("did it reached go routine\n")
-    go func() {
-        for p.CurrentPlayer.IsPlaying() && !p.paused {
-            time.Sleep(time.Millisecond)
-        }
-        fmt.Printf("did it closed then \n")
-        p.CurrentPlayer.Close()
-    }()
+    // for p.CurrentPlayer.IsPlaying() && !p.paused {
+    //     time.Sleep(time.Millisecond)
+    // }
 
     return nil
 }
 
 func (p *Player) TogglePlaySong() {
-    p.mutex.Lock()
-    defer p.mutex.Unlock()
-
     p.paused = !p.paused
     if p.paused {
-        p.CurrentPlayer.Pause()
-    } else {
         p.CurrentPlayer.Play()
-    }}
+    } else {
+        p.CurrentPlayer.Pause()
+    }
+}
 
 func (p *Player) ChangePlaybackSpeed() {
 
