@@ -105,7 +105,7 @@ func GetSongs() ([]string, error) {
 	   } */
 
 	var songs []string
-	err := filepath.WalkDir("/home/cosnate/songs", func(path string, d fs.DirEntry, err error) error {
+	err := filepath.WalkDir("/home/cosnate/phone/songsFile/songs", func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			fmt.Printf("Error accessing path %q: %v\n", path, err)
 			return err

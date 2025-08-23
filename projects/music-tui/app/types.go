@@ -7,7 +7,7 @@ import (
 
 type Model struct {
 	SearchInput string
-        Player    *utils.Player
+	Player      *utils.Player
 
 	Layout *Layout
 	Songs  *Songs
@@ -33,7 +33,6 @@ type Help struct {
 type Songs struct {
 	SongsList []string
 	Downloads []string
-
-	Favorite []string
-	Playlist []string
+	Favorite  []string
+	Playlist  []string
 }

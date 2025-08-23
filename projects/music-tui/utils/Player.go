@@ -1,12 +1,12 @@
 package utils
 
 import (
-    "fmt"
-    "os"
-    "time"
+	"fmt"
+	"os"
+	"time"
 
-    "github.com/ebitengine/oto/v3"
-    "github.com/hajimehoshi/go-mp3"
+	"github.com/ebitengine/oto/v3"
+	"github.com/hajimehoshi/go-mp3"
 )
 
 type Player struct {
@@ -87,9 +87,9 @@ func (p *Player) PlaySong(song *os.File) error {
     p.CurrentPlayer.Play()
 
     // MONITOR PLAYBACK
-    // for p.CurrentPlayer.IsPlaying() && !p.paused {
-    //     time.Sleep(time.Millisecond)
-    // }
+    for p.CurrentPlayer.IsPlaying() && !p.paused {
+        time.Sleep(time.Millisecond)
+    }
 
     return nil
 }
